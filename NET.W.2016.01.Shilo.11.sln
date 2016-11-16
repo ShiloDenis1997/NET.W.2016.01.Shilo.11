@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task1.LogicFibonacci", "Task1.LogicFibonacci\Task1.LogicFibonacci.csproj", "{E3B9233B-64BD-4101-ADC3-2D4D44E539A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task1.Tests", "Task1.Tests\Task1.Tests.csproj", "{EA33D10A-8ACA-4DDE-9D8B-A302F63CD157}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3B9233B-64BD-4101-ADC3-2D4D44E539A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B9233B-64BD-4101-ADC3-2D4D44E539A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B9233B-64BD-4101-ADC3-2D4D44E539A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B9233B-64BD-4101-ADC3-2D4D44E539A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA33D10A-8ACA-4DDE-9D8B-A302F63CD157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA33D10A-8ACA-4DDE-9D8B-A302F63CD157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA33D10A-8ACA-4DDE-9D8B-A302F63CD157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA33D10A-8ACA-4DDE-9D8B-A302F63CD157}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
