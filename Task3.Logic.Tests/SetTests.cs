@@ -125,5 +125,164 @@ namespace Task3.Logic.Tests
             foreach (ItemProductTest t in dataUnexpected)
                 Assert.AreEqual(false, set.Contains(t));
         }
+
+        public static IEnumerable<TestCaseData> UnionTestData
+        {
+            get
+            {
+                object dataIn = new ItemProductTest[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object dataUnion = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("book", 10m), 
+                };
+                object dataExpected = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                    new ItemProductTest("book", 10m),
+                };
+                yield return new TestCaseData(dataIn, dataUnion, dataExpected);
+
+            }
+        }
+
+        [TestCaseSource(nameof(UnionTestData))]
+        [Test]
+        public void UnionWith_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataUnion,
+            ItemProductTest[] dataExpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            //act
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            set.UnionWith(dataUnion);
+            //assert
+            foreach (ItemProductTest t in dataExpected)
+                Assert.AreEqual(true, set.Contains(t));
+        }
+
+        public static IEnumerable<TestCaseData> IntersectTestData
+        {
+            get
+            {
+                object dataIn = new ItemProductTest[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object dataIntersect = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("book", 10m),
+                };
+                object dataExpected = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                };
+                object dataUnexpected = new[]
+                {
+                    new ItemProductTest("book", 10m),
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("pen", 150),
+                };
+                yield return new TestCaseData
+                    (dataIn, dataIntersect, dataExpected, dataUnexpected);
+
+            }
+        }
+
+        [TestCaseSource(nameof(IntersectTestData))]
+        [Test]
+        public void IntersectWith_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataIntersect,
+            ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            //act
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            set.IntersectWith(dataIntersect);
+            //assert
+            foreach (ItemProductTest t in dataExpected)
+                Assert.AreEqual(true, set.Contains(t));
+            foreach (ItemProductTest t in dataUnexpected)
+                Assert.AreEqual(false, set.Contains(t));
+        }
+
+        public static IEnumerable<TestCaseData> ExceptWithTestData
+        {
+            get
+            {
+                object dataIn = new ItemProductTest[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object dataExcept = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("book", 10m),
+                };
+                object dataExpected = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("pen", 150),
+                };
+                object dataUnexpected = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("book", 10m),
+                };
+                yield return new TestCaseData
+                    (dataIn, dataExcept, dataExpected, dataUnexpected);
+
+            }
+        }
+
+        [TestCaseSource(nameof(ExceptWithTestData))]
+        [Test]
+        public void ExceptWith_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataIntersect,
+            ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            //act
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            set.ExceptWith(dataIntersect);
+            //assert
+            foreach (ItemProductTest t in dataExpected)
+                Assert.AreEqual(true, set.Contains(t));
+            foreach (ItemProductTest t in dataUnexpected)
+                Assert.AreEqual(false, set.Contains(t));
+        }
     }
 }
