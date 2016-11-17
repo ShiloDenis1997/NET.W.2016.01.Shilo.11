@@ -339,5 +339,331 @@ namespace Task3.Logic.Tests
             foreach (ItemProductTest t in dataUnexpected)
                 Assert.AreEqual(false, set.Contains(t));
         }
+
+        public static IEnumerable<TestCaseData> IsSubsetOfTestData
+        {
+            get
+            {
+                object dataIn = new []
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, true);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                    new ItemProductTest("piano", 350m), 
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, true);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, false);
+            }
+        }
+
+        [TestCaseSource(nameof(IsSubsetOfTestData))]
+        [Test]
+        public void IsSubsetOf_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] superset, bool expectedAns)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(dataIn);
+            //act
+            bool res = set.IsSubsetOf(superset);
+            //assert
+            Assert.AreEqual(expectedAns, res);
+        }
+
+        [TestCaseSource(nameof(IsSubsetOfTestData))]
+        [Test]
+        public void IsSupersetOf_Elements_SetWithElementsExpected
+            (ItemProductTest[] subset, ItemProductTest[] dataIn, bool expectedAns)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(dataIn);
+            //act
+            bool res = set.IsSupersetOf(subset);
+            //assert
+            Assert.AreEqual(expectedAns, res);
+        }
+
+        public static IEnumerable<TestCaseData> IsProperSubsetOfTestData
+        {
+            get
+            {
+                object dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, false);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                    new ItemProductTest("piano", 350m),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, true);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, false);
+            }
+        }
+
+        [TestCaseSource(nameof(IsProperSubsetOfTestData))]
+        [Test]
+        public void IsProperSubsetOf_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] superset, bool expectedAns)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(dataIn);
+            //act
+            bool res = set.IsProperSubsetOf(superset);
+            //assert
+            Assert.AreEqual(expectedAns, res);
+        }
+
+        [TestCaseSource(nameof(IsProperSubsetOfTestData))]
+        [Test]
+        public void IsProperSupersetOf_Elements_SetWithElementsExpected
+            (ItemProductTest[] properSubset, ItemProductTest[] dataIn, bool expectedAns)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(dataIn);
+            //act
+            bool res = set.IsProperSupersetOf(properSubset);
+            //assert
+            Assert.AreEqual(expectedAns, res);
+        }
+
+        public static IEnumerable<TestCaseData> OverlapsTestData
+        {
+            get
+            {
+                object dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object otherData = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                yield return new TestCaseData
+                    (dataIn, otherData, true);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                otherData = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    new ItemProductTest("chaisasdr", 200m),
+                    new ItemProductTest("baladl", 40m),
+                    new ItemProductTest("peasdn", 150),
+                    new ItemProductTest("piasdano", 350m),
+                };
+                yield return new TestCaseData
+                    (dataIn, otherData, true);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                otherData = new[]
+                {
+                    new ItemProductTest("tablasdae", 100m),
+                    new ItemProductTest("chsdfair", 200m),
+                    new ItemProductTest("basdfll", 40m),
+                };
+                yield return new TestCaseData
+                    (dataIn, otherData, false);
+            }
+        }
+
+        [TestCaseSource(nameof(OverlapsTestData))]
+        [Test]
+        public void Overlaps_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] otherData, bool expectedAns)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(dataIn);
+            //act
+            bool res = set.Overlaps(otherData);
+            //assert
+            Assert.AreEqual(expectedAns, res);
+        }
+
+        public static IEnumerable<TestCaseData> SetEqualsTestData
+        {
+            get
+            {
+                object dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, true);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                    new ItemProductTest("piano", 350m),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, false);
+                dataIn = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                superset = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                yield return new TestCaseData
+                    (dataIn, superset, true);
+            }
+        }
+
+        [TestCaseSource(nameof(SetEqualsTestData))]
+        [Test]
+        public void SetEquals_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] otherData, bool expectedAns)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(dataIn);
+            //act
+            bool res = set.SetEquals(otherData);
+            //assert
+            Assert.AreEqual(expectedAns, res);
+        }
     }
 }
