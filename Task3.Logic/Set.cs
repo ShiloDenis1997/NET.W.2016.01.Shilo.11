@@ -4,11 +4,26 @@ using System.Collections.Generic;
 
 namespace Task3.Logic
 {
+    /// <summary>
+    /// Provides functionality of set of unique elements
+    /// </summary>
     public class Set<T> : ISet<T> where T : class, IEquatable<T>
     {
+        /// <summary>
+        /// inner storage for elements of set
+        /// </summary>
         private T[] array;
         private readonly IEqualityComparer<T> equalityComparer;
 
+        /// <summary>
+        /// Initializes an instance of <see cref="Set{T}"/> with specified
+        /// <paramref name="capacity"/> and <paramref name="equalityComparer"/>
+        /// </summary>
+        /// <param name="capacity"></param>
+        /// <param name="equalityComparer">Comparer to compare 
+        /// elements of the set</param>
+        /// <exception cref="ArgumentException">Throws if capacity
+        /// is less or equal to zero</exception>
         public Set(int capacity = 50, IEqualityComparer<T> equalityComparer = null)
         {
             if (capacity <= 0)
@@ -18,22 +33,47 @@ namespace Task3.Logic
             this.equalityComparer = equalityComparer;
         }
 
+        /// <summary>
+        /// Initializes an instance of <see cref="Set{T}"/> with specified
+        /// <paramref name="capacity"/> and <paramref name="equalityComparer"/>, 
+        /// that based on enumeration of <paramref name="elements"/>
+        /// </summary>
+        /// <param name="capacity"></param>
+        /// <param name="equalityComparer">Comparer to compare 
+        /// elements of the set</param>
+        /// <param name="elements"></param>
+        /// <exception cref="ArgumentException">Throws if capacity
+        /// is less or equal to zero</exception>
+        /// <exception cref="ArgumentNullException">Throws if
+        /// <paramref name="elements"/> is null</exception>
         public Set(IEnumerable<T> elements, IEqualityComparer<T> equalityComparer = null,
             int capacity = 50)
         {
-            this.equalityComparer = equalityComparer;
             if (elements == null)
                 throw new ArgumentNullException
                     ($"{nameof(elements)} parameter is null");
             if (capacity <= 0)
                 throw new ArgumentException(
                     $"{nameof(capacity)} is less or equal to zero");
+            this.equalityComparer = equalityComparer;
             UnionWith(elements);
         }
 
+        /// <summary>
+        /// Number of elements in the set
+        /// </summary>
         public int Count { get; private set; }
+        /// <summary>
+        /// Wether set is readonly
+        /// </summary>
         public bool IsReadOnly => false;
-
+        
+        /// <summary>
+        /// Adds item in the set
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>true if item was added to the set, false if item is
+        /// already in the set</returns>
         public bool Add(T item)
         {
             if (Contains(item))
@@ -44,6 +84,12 @@ namespace Task3.Logic
             return true;
         }
 
+        /// <summary>
+        /// Unions elements of <paramref name="other"/> with this set
+        /// </summary>
+        /// <param name="other"></param>
+        /// <exception cref="ArgumentNullException">Throws if other
+        /// is null</exception>
         public void UnionWith(IEnumerable<T> other)
         {
             if (other == null)
@@ -57,6 +103,12 @@ namespace Task3.Logic
             }
         }
 
+        /// <summary>
+        /// Remain elements, that both in this set and in <paramref name="other"/>
+        /// </summary>
+        /// <param name="other"></param>
+        /// <exception cref="ArgumentNullException">Throws if other 
+        /// is null</exception>
         public void IntersectWith(IEnumerable<T> other)
         {
             if (other == null)
@@ -78,6 +130,12 @@ namespace Task3.Logic
             Count = count;
         }
 
+        /// <summary>
+        /// Remains elements of this set, that are not in <paramref name="other"/>
+        /// </summary>
+        /// <param name="other"></param>
+        /// <exception cref="ArgumentNullException">Throws if
+        /// <paramref name="other"/> is null</exception>
         public void ExceptWith(IEnumerable<T> other)
         {
             if (other == null)
@@ -90,6 +148,13 @@ namespace Task3.Logic
             }
         }
 
+        /// <summary>
+        /// Remains elements that are in this set, or in <paramref name="other"/>,
+        /// but not in both
+        /// </summary>
+        /// <param name="other"></param>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
             if (other == null)
@@ -104,6 +169,13 @@ namespace Task3.Logic
             SymmetricExceptWithSet(set);
         }
 
+        /// <summary>
+        /// Checks if this set is subset of <paramref name="other"/>
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public bool IsSubsetOf(IEnumerable<T> other)
         {
             if (other == null)
@@ -118,6 +190,13 @@ namespace Task3.Logic
             return false;
         }
 
+        /// <summary>
+        /// Checks if this set is superset of <paramref name="other"/>
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public bool IsSupersetOf(IEnumerable<T> other)
         {
             if (other == null)
@@ -128,6 +207,13 @@ namespace Task3.Logic
             return true;
         }
 
+        /// <summary>
+        /// Checks if this set is proper superset of <paramref name="other"/>
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public bool IsProperSupersetOf(IEnumerable<T> other)
         {
             if (other == null)
@@ -146,6 +232,13 @@ namespace Task3.Logic
             return true;
         }
 
+        /// <summary>
+        /// Checks if this set is proper subset of <paramref name="other"/>
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public bool IsProperSubsetOf(IEnumerable<T> other)
         {
             if (other == null)
@@ -165,6 +258,13 @@ namespace Task3.Logic
             return false;
         }
 
+        /// <summary>
+        /// Checks if this set and <paramref name="other"/> overlaps each other
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public bool Overlaps(IEnumerable<T> other)
         {
             if (other == null)
@@ -175,6 +275,14 @@ namespace Task3.Logic
             return false;
         }
 
+        /// <summary>
+        /// Cheks if this set and <paramref name="other"/> contains the same 
+        /// set of elements. Duplications ignored.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="other"/> 
+        /// is null</exception>
         public bool SetEquals(IEnumerable<T> other)
         {
             if (other == null)
@@ -191,12 +299,20 @@ namespace Task3.Logic
             return false;
         }
 
+        /// <summary>
+        /// Clears set
+        /// </summary>
         public void Clear()
         {
             Count = 0;
             array = new T[array.Length];
         }
 
+        /// <summary>
+        /// Checks if this set contains an <paramref name="item"/>
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool Contains(T item)
         {
             if (!FindItemPos(item).HasValue)
@@ -204,6 +320,18 @@ namespace Task3.Logic
             return true;
         }
 
+        /// <summary>
+        /// Copies items of this set to <paramref name="ar"/>
+        /// </summary>
+        /// <param name="ar">Destination array</param>
+        /// <param name="arrayIndex">Destination start position</param>
+        /// <exception cref="ArgumentNullException">Throws if
+        /// <paramref name="ar"/> is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Throws if
+        /// <paramref name="arrayIndex"/> is out of <paramref name="ar"/>
+        /// boundaries</exception>
+        /// <exception cref="ArgumentException">Throws if <paramref name="ar"/>
+        /// has not enought space for items of this set</exception>
         public void CopyTo(T[] ar, int arrayIndex)
         {
             if (ar == null)
@@ -217,6 +345,11 @@ namespace Task3.Logic
             Array.Copy(array, 0, ar, arrayIndex, Count);
         }
 
+        /// <summary>
+        /// Removes <paramref name="item"/> from this set. Takes O(n) operations
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool Remove(T item)
         {
             int? pos = FindItemPos(item);
@@ -228,6 +361,10 @@ namespace Task3.Logic
             return true;
         }
 
+        /// <summary>
+        /// Adds item to set
+        /// </summary>
+        /// <param name="item"></param>
         void ICollection<T>.Add(T item)
         {
             Add(item);
@@ -244,6 +381,11 @@ namespace Task3.Logic
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Resizes inner array. <paramref name="capacity"/> should be
+        /// greateer or equal to <see cref="Count"/>.
+        /// </summary>
+        /// <param name="capacity"></param>
         private void ResizeArray(int capacity)
         {
             T[] temp = new T[capacity];
@@ -251,6 +393,11 @@ namespace Task3.Logic
             array = temp;
         }
 
+        /// <summary>
+        /// finds position of <paramref name="item"/> in the array
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private int? FindItemPos(T item)
         {
             for (int i = 0; i < Count; i++)
@@ -266,6 +413,10 @@ namespace Task3.Logic
             return null;
         }
 
+        /// <summary>
+        /// Makes symmetricExcept with <paramref name="other"/> set
+        /// </summary>
+        /// <param name="other"></param>
         private void SymmetricExceptWithSet(Set<T> other)
         {
             foreach (T el in other)
