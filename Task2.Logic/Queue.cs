@@ -29,7 +29,6 @@ namespace Task2.Logic
         /// Initializes new instance of <see cref="Queue{T}"/> with specified
         ///  <paramref name="capacity" />.
         /// </summary>
-        /// <param name="capacity">If not specified, it is equal to 50</param>
         /// <exception cref="ArgumentException">Throws if 
         /// <paramref name="capacity"/> is less or equal to zero</exception>
         public Queue(int capacity = 50)
@@ -38,6 +37,29 @@ namespace Task2.Logic
                 throw new ArgumentException
                     ($"{nameof(capacity)} is less or equal to zero");
             array = new T[capacity];
+        }
+
+        /// <summary>
+        /// Initializes new instance of <see cref="Queue{T}"/> based on
+        /// <paramref name="elements"/> with specified <paramref name="capacity"/>
+        /// </summary>
+        /// <exception cref="ArgumentException">Throws if 
+        /// <paramref name="capacity"/> is less or equal to zero</exception>
+        /// <exception cref="ArgumentNullException">Throws if 
+        /// <paramref name="elements"/> is null</exception>
+        public Queue(IEnumerable<T> elements, int capacity = 50)
+        {
+            if (capacity <= 0)
+                throw new ArgumentException
+                    ($"{nameof(capacity)} is less or equal to zero");
+            if (elements == null)
+                throw new ArgumentNullException
+                    ($"{nameof(elements)} parameter is null");
+            array = new T[capacity];
+            foreach (T el in elements)
+            {
+                Push(el);
+            }
         }
 
         /// <summary>
