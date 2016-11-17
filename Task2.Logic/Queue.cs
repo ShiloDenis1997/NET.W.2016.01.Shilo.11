@@ -194,12 +194,14 @@ namespace Task2.Logic
         private class QueueEnumerator : IEnumerator<T>
         {
             private int pos;
+            private int number;
             private Queue<T> queue;
 
             public QueueEnumerator(Queue<T> queue)
             {
                 this.queue = queue;
                 pos = queue.front - 1;
+                number = -1;
             }
 
             public void Dispose() {}
@@ -207,9 +209,10 @@ namespace Task2.Logic
             public bool MoveNext()
             {
                 pos++;
+                number++;
                 if (pos == queue.array.Length)
                     pos = 0;
-                if (pos == queue.back)
+                if (pos == queue.back && number == queue.Count)
                     return false;
                 return true;
             }
@@ -217,6 +220,7 @@ namespace Task2.Logic
             public void Reset()
             {
                 pos = queue.front - 1;
+                number = -1;
             }
 
             public T Current => queue.array[pos];
