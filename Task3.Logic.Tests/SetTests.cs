@@ -10,7 +10,7 @@ namespace Task3.Logic.Tests
     [TestFixture]
     public class SetTests
     {
-        public class ItemProductTest : IEquatable<SetTests.ItemProductTest>
+        public class ItemProductTest : IEquatable<ItemProductTest>
         {
             public string Name { get; private set; }
             public decimal Price { get; private set; }
@@ -278,6 +278,61 @@ namespace Task3.Logic.Tests
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
             set.ExceptWith(dataIntersect);
+            //assert
+            foreach (ItemProductTest t in dataExpected)
+                Assert.AreEqual(true, set.Contains(t));
+            foreach (ItemProductTest t in dataUnexpected)
+                Assert.AreEqual(false, set.Contains(t));
+        }
+
+        public static IEnumerable<TestCaseData> SymmetricExceptWithTestData
+        {
+            get
+            {
+                object dataIn = new ItemProductTest[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("pen", 150),
+                };
+                object dataExcept = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                    new ItemProductTest("book", 10m),
+                };
+                object dataExpected = new[]
+                {
+                    new ItemProductTest("table", 100m),
+                    null,
+                    new ItemProductTest("book", 10m),
+                    new ItemProductTest("pen", 150),
+                };
+                object dataUnexpected = new[]
+                {
+                    new ItemProductTest("chair", 200m),
+                    new ItemProductTest("ball", 40m),
+                };
+                yield return new TestCaseData
+                    (dataIn, dataExcept, dataExpected, dataUnexpected);
+
+            }
+        }
+
+        [TestCaseSource(nameof(SymmetricExceptWithTestData))]
+        [Test]
+        public void SymmetricExceptWith_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataIntersect,
+            ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            //act
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            set.SymmetricExceptWith(dataIntersect);
             //assert
             foreach (ItemProductTest t in dataExpected)
                 Assert.AreEqual(true, set.Contains(t));

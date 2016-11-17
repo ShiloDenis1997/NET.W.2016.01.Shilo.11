@@ -56,6 +56,7 @@ namespace Task3.Logic
                 throw new ArgumentException(
                     $"{nameof(capacity)} is less or equal to zero");
             this.equalityComparer = equalityComparer;
+            array = new T[capacity];
             UnionWith(elements);
         }
 
