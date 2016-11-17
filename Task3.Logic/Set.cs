@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task3.Logic
 {
     public class Set<T> : ISet<T> where T : class, IEquatable<T>
     {
         private T[] array;
-        private IEqualityComparer<T> equalityComparer;
+        private readonly IEqualityComparer<T> equalityComparer;
 
         public Set(int capacity = 50, IEqualityComparer<T> equalityComparer = null)
         {
@@ -21,9 +18,10 @@ namespace Task3.Logic
             this.equalityComparer = equalityComparer;
         }
 
-        public Set(IEnumerable<T> elements, IEqualityComparer<T> equalityComparer,
+        public Set(IEnumerable<T> elements, IEqualityComparer<T> equalityComparer = null,
             int capacity = 50)
         {
+            this.equalityComparer = equalityComparer;
             if (elements == null)
                 throw new ArgumentNullException
                     ($"{nameof(elements)} parameter is null");
@@ -201,38 +199,44 @@ namespace Task3.Logic
 
         public bool Contains(T item)
         {
-            for (int i = 0; i < Count; i++)
-            {
-                bool compareResult;
-                if (equalityComparer != null)
-                    compareResult = equalityComparer.Equals(item, array[i]);
-                else
-                    compareResult = array[i].Equals(item);
-                if (compareResult)
-                    return false;
-            }
+            if (!FindItemPos(item).HasValue)
+                return false;
             return true;
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
+        public void CopyTo(T[] ar, int arrayIndex)
         {
-            if (array == null)
-                throw new ArgumentNullException();
+            if (ar == null)
+                throw new ArgumentNullException($"{nameof(ar)} is null");
+            if (arrayIndex < 0 || arrayIndex >= ar.Length)
+                throw new ArgumentOutOfRangeException
+                    ($"{nameof(arrayIndex)} is out of range");
+            if (ar.Length - arrayIndex < Count)
+                throw new ArgumentException
+                    ($"{nameof(ar)} has not enought length");
+            Array.Copy(array, 0, ar, arrayIndex, Count);
         }
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            int? pos = FindItemPos(item);
+            if (!pos.HasValue)
+                return false;
+            Count--;
+            for (int i = pos.Value; i < Count; i++)
+                array[i] = array[i + 1];
+            return true;
         }
 
         void ICollection<T>.Add(T item)
         {
-            throw new NotImplementedException();
+            Add(item);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; i++)
+                yield return array[i];
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -245,6 +249,21 @@ namespace Task3.Logic
             T[] temp = new T[capacity];
             Array.Copy(array, temp, Count);
             array = temp;
+        }
+
+        private int? FindItemPos(T item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                bool compareResult;
+                if (equalityComparer != null)
+                    compareResult = equalityComparer.Equals(item, array[i]);
+                else
+                    compareResult = array[i].Equals(item);
+                if (compareResult)
+                    return i;
+            }
+            return null;
         }
 
         private void SymmetricExceptWithSet(Set<T> other)
