@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F24925E8-7331-4037-9A42-C5C202B2E0A2}</ProjectGuid>
+    <ProjectGuid>{5BA2F372-DF7E-4F51-9BE4-9A197604D251}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Task2.Logic.Tests</RootNamespace>
-    <AssemblyName>Task2.Logic.Tests</AssemblyName>
+    <RootNamespace>Task3.Logic.Tests</RootNamespace>
+    <AssemblyName>Task3.Logic.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,16 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="QueueTests.cs" />
+    <Compile Include="SetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Task2.Logic\Task2.Logic.csproj">
-      <Project>{712b7d7f-4345-489a-a994-64523347f203}</Project>
-      <Name>Task2.Logic</Name>
+    <ProjectReference Include="..\Task3.Logic\Task3.Logic.csproj">
+      <Project>{93453fe1-346e-4791-b49b-06b839baef9d}</Project>
+      <Name>Task3.Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -402,6 +402,10 @@ namespace Task3.Logic
         {
             for (int i = 0; i < Count; i++)
             {
+                if (ReferenceEquals(item, array[i]))
+                    return i;
+                if (ReferenceEquals(array[i], null))
+                    continue;
                 bool compareResult;
                 if (equalityComparer != null)
                     compareResult = equalityComparer.Equals(item, array[i]);
