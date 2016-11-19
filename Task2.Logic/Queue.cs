@@ -24,6 +24,10 @@ namespace Task2.Logic
         /// position for next element
         /// </summary>
         private int back;
+        /// <summary>
+        /// Current version of this instance of <see cref="Queue{T}"/>
+        /// </summary>
+        private int versionOfQueue = 0;
 
         /// <summary>
         /// Initializes new instance of <see cref="Queue{T}"/> with specified
@@ -75,6 +79,8 @@ namespace Task2.Logic
         /// Indicates if queue is empty
         /// </summary>
         public bool Empty => Count == 0;
+        
+        
 
         /// <summary>
         /// Adds new element in the collection. It's usually takes O(1) operations,
@@ -83,6 +89,7 @@ namespace Task2.Logic
         /// <param name="element">Element to add into the queue</param>
         public void Push(T element)
         {
+            versionOfQueue++;
             if (Count == array.Length)
                 ResizeArray(array.Length * 2);
             array[back++] = element;
@@ -112,6 +119,7 @@ namespace Task2.Logic
         {
             if (Empty)
                 throw new InvalidOperationException("Queue is empty");
+            versionOfQueue++;
             array[front++] = default(T);
             if (front == array.Length)
                 front = 0;
@@ -194,36 +202,53 @@ namespace Task2.Logic
         private class QueueEnumerator : IEnumerator<T>
         {
             private int pos;
+            /// <summary>
+            /// Number of already enumerated elements
+            /// </summary>
             private int number;
             private Queue<T> queue;
+            private int initVersionOfQueue;
+            private T currentElement;
 
             public QueueEnumerator(Queue<T> queue)
             {
+                initVersionOfQueue = queue.versionOfQueue;
                 this.queue = queue;
                 pos = queue.front - 1;
                 number = -1;
+                currentElement = default(T);
             }
 
             public void Dispose() {}
 
             public bool MoveNext()
             {
+                if (queue.versionOfQueue != initVersionOfQueue)
+                    throw new InvalidOperationException
+                        ("Collection has been changed");
                 pos++;
                 number++;
                 if (pos == queue.array.Length)
                     pos = 0;
                 if (pos == queue.back && number == queue.Count)
+                {
+                    currentElement = default(T);
                     return false;
+                }
+                currentElement = queue.array[pos];
                 return true;
             }
 
             public void Reset()
             {
+                if (queue.versionOfQueue != initVersionOfQueue)
+                    throw new InvalidOperationException
+                        ("Collection has been changed");
                 pos = queue.front - 1;
                 number = -1;
             }
 
-            public T Current => queue.array[pos];
+            public T Current => currentElement;
 
             object IEnumerator.Current => Current;
         }

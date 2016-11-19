@@ -149,5 +149,29 @@ namespace Task2.Logic.Tests
             //assert
             CollectionAssert.AreEqual(expectedArray, destination);
         }
+
+        [Test]
+        public void Enumerator_CollectionWasChanged_ExceptionExpected()
+        {
+            Queue<int> q = new Queue<int>(1);
+            for (int i = 0; i < 10; i++)
+                q.Push(i);
+            Assert.Throws(typeof(InvalidOperationException),
+                () =>
+                {
+                    foreach (var el in q)
+                    {
+                        q.Pop();
+                    }
+                });
+            Assert.Throws(typeof(InvalidOperationException),
+                () =>
+                {
+                    foreach (var el in q)
+                    {
+                        q.Push(el);
+                    }
+                });
+        }
     }
 }
