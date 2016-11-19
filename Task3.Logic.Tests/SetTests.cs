@@ -166,13 +166,30 @@ namespace Task3.Logic.Tests
         {
             //arrange
             Set<ItemProductTest> set = new Set<ItemProductTest>(1);
-            //act
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
+            //act
             set.UnionWith(dataUnion);
             //assert
-            foreach (ItemProductTest t in dataExpected)
-                Assert.AreEqual(true, set.Contains(t));
+            CollectionAssert.AreEquivalent(dataExpected, set);
+            CollectionAssert.AllItemsAreUnique(set);
+        }
+
+        [TestCaseSource(nameof(UnionTestData))]
+        [Test]
+        public void UnionStatic_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataUnion,
+            ItemProductTest[] dataExpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            //act
+            Set<ItemProductTest> actual = Set<ItemProductTest>.Union(set, dataUnion);
+            //assert
+            CollectionAssert.AreEquivalent(dataExpected, actual);
+            CollectionAssert.AllItemsAreUnique(actual);
         }
 
         public static IEnumerable<TestCaseData> IntersectTestData
@@ -219,15 +236,32 @@ namespace Task3.Logic.Tests
         {
             //arrange
             Set<ItemProductTest> set = new Set<ItemProductTest>(1);
-            //act
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
+            //act
             set.IntersectWith(dataIntersect);
             //assert
-            foreach (ItemProductTest t in dataExpected)
-                Assert.AreEqual(true, set.Contains(t));
-            foreach (ItemProductTest t in dataUnexpected)
-                Assert.AreEqual(false, set.Contains(t));
+            CollectionAssert.IsNotSubsetOf(dataUnexpected, set);
+            CollectionAssert.AreEquivalent(dataExpected, set);
+            CollectionAssert.AllItemsAreUnique(set);
+        }
+
+        [TestCaseSource(nameof(IntersectTestData))]
+        [Test]
+        public void IntersectStatic_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataIntersect,
+            ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            //act
+            Set<ItemProductTest> actual = Set<ItemProductTest>.Intersect(set, dataIntersect);
+            //assert
+            CollectionAssert.IsNotSubsetOf(dataUnexpected, actual);
+            CollectionAssert.AreEquivalent(dataExpected, actual);
+            CollectionAssert.AllItemsAreUnique(actual);
         }
 
         public static IEnumerable<TestCaseData> ExceptWithTestData
@@ -269,20 +303,37 @@ namespace Task3.Logic.Tests
         [TestCaseSource(nameof(ExceptWithTestData))]
         [Test]
         public void ExceptWith_Elements_SetWithElementsExpected
-            (ItemProductTest[] dataIn, ItemProductTest[] dataIntersect,
+            (ItemProductTest[] dataIn, ItemProductTest[] dataExcept,
             ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
         {
             //arrange
             Set<ItemProductTest> set = new Set<ItemProductTest>(1);
-            //act
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
-            set.ExceptWith(dataIntersect);
+            //act
+            set.ExceptWith(dataExcept);
             //assert
-            foreach (ItemProductTest t in dataExpected)
-                Assert.AreEqual(true, set.Contains(t));
-            foreach (ItemProductTest t in dataUnexpected)
-                Assert.AreEqual(false, set.Contains(t));
+            CollectionAssert.IsNotSubsetOf(dataUnexpected, set);
+            CollectionAssert.AreEquivalent(dataExpected, set);
+            CollectionAssert.AllItemsAreUnique(set);
+        }
+
+        [TestCaseSource(nameof(ExceptWithTestData))]
+        [Test]
+        public void ExceptStatic_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataExcept,
+            ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            //act
+            Set<ItemProductTest> actual = Set<ItemProductTest>.Except(set, dataExcept);
+            //assert
+            CollectionAssert.IsNotSubsetOf(dataUnexpected, actual);
+            CollectionAssert.AreEquivalent(dataExpected, actual);
+            CollectionAssert.AllItemsAreUnique(actual);
         }
 
         public static IEnumerable<TestCaseData> SymmetricExceptWithTestData
@@ -324,7 +375,7 @@ namespace Task3.Logic.Tests
         [TestCaseSource(nameof(SymmetricExceptWithTestData))]
         [Test]
         public void SymmetricExceptWith_Elements_SetWithElementsExpected
-            (ItemProductTest[] dataIn, ItemProductTest[] dataIntersect,
+            (ItemProductTest[] dataIn, ItemProductTest[] dataSymmetricExcept,
             ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
         {
             //arrange
@@ -332,12 +383,30 @@ namespace Task3.Logic.Tests
             //act
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
-            set.SymmetricExceptWith(dataIntersect);
+            set.SymmetricExceptWith(dataSymmetricExcept);
             //assert
-            foreach (ItemProductTest t in dataExpected)
-                Assert.AreEqual(true, set.Contains(t));
-            foreach (ItemProductTest t in dataUnexpected)
-                Assert.AreEqual(false, set.Contains(t));
+            CollectionAssert.IsNotSubsetOf(dataUnexpected, set);
+            CollectionAssert.AreEquivalent(dataExpected, set);
+            CollectionAssert.AllItemsAreUnique(set);
+        }
+
+        [TestCaseSource(nameof(SymmetricExceptWithTestData))]
+        [Test]
+        public void SymmetricExceptionStatic_Elements_SetWithElementsExpected
+            (ItemProductTest[] dataIn, ItemProductTest[] dataSymmetricExcept,
+            ItemProductTest[] dataExpected, ItemProductTest[] dataUnexpected)
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>(1);
+            foreach (ItemProductTest t in dataIn)
+                set.Add(t);
+            //act
+            Set<ItemProductTest> actual = Set<ItemProductTest>.SymmetricExcept
+                (set, dataSymmetricExcept);
+            //assert
+            CollectionAssert.IsNotSubsetOf(dataUnexpected, actual);
+            CollectionAssert.AreEquivalent(dataExpected, actual);
+            CollectionAssert.AllItemsAreUnique(actual);
         }
 
         public static IEnumerable<TestCaseData> IsSubsetOfTestData

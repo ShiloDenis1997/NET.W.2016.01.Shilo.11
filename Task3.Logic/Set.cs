@@ -7,7 +7,7 @@ namespace Task3.Logic
     /// <summary>
     /// Provides functionality of set of unique elements
     /// </summary>
-    public class Set<T> : ISet<T> where T : class, IEquatable<T>
+    public class Set<T> : ISet<T>, ICloneable where T : class, IEquatable<T>
     {
         /// <summary>
         /// inner storage for elements of set
@@ -84,6 +84,56 @@ namespace Task3.Logic
             array[Count++] = item;
             return true;
         }
+        
+        /// <summary>
+        /// Static method to create new <see cref="Set{T}"/> which is
+        /// the union of <paramref name="first"/> and <paramref name="second"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
+        /// or <paramref name="second"/> is null</exception>
+        public static Set<T> Union(Set<T> first, IEnumerable<T> second)
+        {
+            return MakeStaticOperation
+                (first, second, (set, enumerable) => set.UnionWith(enumerable));
+        }
+
+        /// <summary>
+        /// Static method to create new <see cref="Set{T}"/> which is
+        /// the intersection of <paramref name="first"/> and <paramref name="second"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
+        /// or <paramref name="second"/> is null</exception>
+        public static Set<T> Intersect(Set<T> first, IEnumerable<T> second)
+        {
+            return MakeStaticOperation
+                (first, second, (set, enumerable) => set.IntersectWith(enumerable));
+        }
+
+        /// <summary>
+        /// Static method to create new <see cref="Set{T}"/> which is
+        /// the exception of <paramref name="second"/> from <paramref name="first"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
+        /// or <paramref name="second"/> is null</exception>
+        public static Set<T> Except(Set<T> first, IEnumerable<T> second)
+        {
+            return MakeStaticOperation
+                (first, second, (set, enumerable) => set.ExceptWith(enumerable));
+        }
+
+        /// <summary>
+        /// Static method to create new <see cref="Set{T}"/> which is
+        /// the symmetric exception of <paramref name="first"/> and 
+        /// <paramref name="second"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
+        /// or <paramref name="second"/> is null</exception>
+        public static Set<T> SymmetricExcept(Set<T> first, IEnumerable<T> second)
+        {
+            return MakeStaticOperation
+                (first, second, (set, enumerable) => set.SymmetricExceptWith(enumerable));
+        }
+
 
         /// <summary>
         /// Unions elements of <paramref name="other"/> with this set
@@ -166,7 +216,8 @@ namespace Task3.Logic
             {
                 Clear();
             }
-            Set<T> set = new Set<T>(other, equalityComparer);
+            Set<T> set = other as Set<T>;
+            set = set ?? new Set<T>(other, equalityComparer);
             SymmetricExceptWithSet(set);
         }
 
@@ -371,6 +422,16 @@ namespace Task3.Logic
             Add(item);
         }
 
+        /// <summary>
+        /// Public method to clone <see cref="Set{T}"/>. Hides 
+        /// implementation of <see cref="ICloneable"/>, which returns <see cref="object"/>
+        /// </summary>
+        /// <returns></returns>
+        public Set<T> Clone()
+        {
+            return new Set<T>(this, equalityComparer, Count);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
@@ -429,6 +490,35 @@ namespace Task3.Logic
                 if (!Remove(el))
                     Add(el);
             }
+        }
+
+        /// <summary>
+        /// Private static method to make static operation with stack
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="operation">must be not null</param>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
+        /// or <paramref name="second"/> is null</exception>
+        private static Set<T> MakeStaticOperation
+            (Set<T> first, IEnumerable<T> second, Action<ISet<T>, IEnumerable<T>> operation)
+        {
+            if (first == null)
+                throw new ArgumentNullException($"{nameof(first)} is null");
+            if (second == null)
+                throw new ArgumentNullException($"{nameof(second)} is null");
+            Set<T> ret = first.Clone();
+            operation(ret, second);
+            return ret;
+        }
+        /// <summary>
+        /// Implementation of <see cref="ICloneable"/>. Returns new <see cref="Set{T}"/>
+        /// based on current;
+        /// </summary>
+        /// <returns></returns>
+        object ICloneable.Clone()
+        {
+            return Clone();
         }
     }
 }
