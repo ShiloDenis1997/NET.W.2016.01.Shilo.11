@@ -734,5 +734,25 @@ namespace Task3.Logic.Tests
             //assert
             Assert.AreEqual(expectedAns, res);
         }
+
+        [Test]
+        public void SetEnumerating_ExceptionExpected()
+        {
+            //arrange
+            Set<ItemProductTest> set = new Set<ItemProductTest>()
+            {
+                new ItemProductTest("ball", 12m),
+                new ItemProductTest("chair", 14m),
+            };
+            //assert
+            Assert.Throws(typeof(InvalidOperationException),
+                () =>
+                {
+                    foreach (var v in set)
+                    {
+                        set.Add(new ItemProductTest("new", 1000m));
+                    }
+                });
+        }
     }
 }

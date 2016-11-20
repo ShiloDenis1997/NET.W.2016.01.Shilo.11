@@ -16,6 +16,11 @@ namespace Task3.Logic
         private readonly IEqualityComparer<T> equalityComparer;
 
         /// <summary>
+        /// version of set
+        /// </summary>
+        private int version;
+
+        /// <summary>
         /// Initializes an instance of <see cref="Set{T}"/> with specified
         /// <paramref name="capacity"/> and <paramref name="equalityComparer"/>
         /// </summary>
@@ -81,6 +86,7 @@ namespace Task3.Logic
                 return false;
             if (Count == array.Length)
                 ResizeArray(array.Length*2);
+            version++;
             array[Count++] = item;
             return true;
         }
@@ -407,6 +413,7 @@ namespace Task3.Logic
             int? pos = FindItemPos(item);
             if (!pos.HasValue)
                 return false;
+            version++;
             Count--;
             for (int i = pos.Value; i < Count; i++)
                 array[i] = array[i + 1];
@@ -432,10 +439,20 @@ namespace Task3.Logic
             return new Set<T>(this, equalityComparer, Count);
         }
 
+        /// <summary>
+        /// Returns enumerator for <see cref="Set{T}"/>
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Throws if
+        /// <see cref="Set{T}"/> has been changed while enumerating</exception>
         public IEnumerator<T> GetEnumerator()
         {
+            int startVersion = version;
             for (int i = 0; i < Count; i++)
+            {
+                if (startVersion != version)
+                    throw new InvalidOperationException("Set has been changed");
                 yield return array[i];
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

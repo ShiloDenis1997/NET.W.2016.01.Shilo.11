@@ -221,6 +221,11 @@ namespace Task2.Logic
 
             public void Dispose() {}
 
+            /// <summary>
+            /// Moves to the next element of queue
+            /// </summary>
+            /// <exception cref="InvalidOperationException">Throws if
+            /// queue has been changed while enumerating</exception>
             public bool MoveNext()
             {
                 if (queue.versionOfQueue != initVersionOfQueue)
@@ -239,6 +244,11 @@ namespace Task2.Logic
                 return true;
             }
 
+            /// <summary>
+            /// Begins enumeration from start
+            /// </summary>
+            /// <exception cref="InvalidOperationException">Throws if 
+            /// queue has been changed while enumerating</exception>
             public void Reset()
             {
                 if (queue.versionOfQueue != initVersionOfQueue)
