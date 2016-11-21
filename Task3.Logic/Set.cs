@@ -95,36 +95,48 @@ namespace Task3.Logic
         /// Static method to create new <see cref="Set{T}"/> which is
         /// the union of <paramref name="first"/> and <paramref name="second"/>
         /// </summary>
+        /// <param name="equalityComparer">Equality comparer for result set.
+        /// If not specified, comparer of <paramref name="first"/> will be used</param>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
         /// or <paramref name="second"/> is null</exception>
-        public static Set<T> Union(Set<T> first, IEnumerable<T> second)
+        public static Set<T> Union
+            (Set<T> first, Set<T> second, IEqualityComparer<T> equalityComparer = null)
         {
             return MakeStaticOperation
-                (first, second, (set, enumerable) => set.UnionWith(enumerable));
+                (first, second, 
+                    (set, enumerable) => set.UnionWith(enumerable), equalityComparer);
         }
 
         /// <summary>
         /// Static method to create new <see cref="Set{T}"/> which is
         /// the intersection of <paramref name="first"/> and <paramref name="second"/>
         /// </summary>
+        /// <param name="equalityComparer">Equality comparer for result set.
+        /// If not specified, comparer of <paramref name="first"/> will be used</param>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
         /// or <paramref name="second"/> is null</exception>
-        public static Set<T> Intersect(Set<T> first, IEnumerable<T> second)
+        public static Set<T> Intersect
+            (Set<T> first, Set<T> second, IEqualityComparer<T> equalityComparer = null)
         {
             return MakeStaticOperation
-                (first, second, (set, enumerable) => set.IntersectWith(enumerable));
+                (first, second, 
+                (set, enumerable) => set.IntersectWith(enumerable), equalityComparer);
         }
 
         /// <summary>
         /// Static method to create new <see cref="Set{T}"/> which is
         /// the exception of <paramref name="second"/> from <paramref name="first"/>
         /// </summary>
+        /// /// <param name="equalityComparer">Equality comparer for result set.
+        /// If not specified, comparer of <paramref name="first"/> will be used</param>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
         /// or <paramref name="second"/> is null</exception>
-        public static Set<T> Except(Set<T> first, IEnumerable<T> second)
+        public static Set<T> Except
+            (Set<T> first, Set<T> second, IEqualityComparer<T> equalityComparer = null)
         {
             return MakeStaticOperation
-                (first, second, (set, enumerable) => set.ExceptWith(enumerable));
+                (first, second, 
+                    (set, enumerable) => set.ExceptWith(enumerable), equalityComparer);
         }
 
         /// <summary>
@@ -132,12 +144,16 @@ namespace Task3.Logic
         /// the symmetric exception of <paramref name="first"/> and 
         /// <paramref name="second"/>
         /// </summary>
+        /// <param name="equalityComparer">Equality comparer for result set.
+        /// If not specified, comparer of <paramref name="first"/> will be used</param>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
         /// or <paramref name="second"/> is null</exception>
-        public static Set<T> SymmetricExcept(Set<T> first, IEnumerable<T> second)
+        public static Set<T> SymmetricExcept
+            (Set<T> first, Set<T> second, IEqualityComparer<T> equalityComparer = null)
         {
             return MakeStaticOperation
-                (first, second, (set, enumerable) => set.SymmetricExceptWith(enumerable));
+                (first, second, 
+                    (set, enumerable) => set.SymmetricExceptWith(enumerable), equalityComparer);
         }
 
 
@@ -514,17 +530,21 @@ namespace Task3.Logic
         /// </summary>
         /// <param name="first"></param>
         /// <param name="second"></param>
+        /// <param name="equalityComparer"></param>
         /// <param name="operation">must be not null</param>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="first"/>
         /// or <paramref name="second"/> is null</exception>
         private static Set<T> MakeStaticOperation
-            (Set<T> first, IEnumerable<T> second, Action<ISet<T>, IEnumerable<T>> operation)
+            (Set<T> first, IEnumerable<T> second, Action<ISet<T>, IEnumerable<T>> operation,
+            IEqualityComparer<T> equalityComparer)
         {
             if (first == null)
                 throw new ArgumentNullException($"{nameof(first)} is null");
             if (second == null)
                 throw new ArgumentNullException($"{nameof(second)} is null");
-            Set<T> ret = first.Clone();
+            var ret = equalityComparer == null 
+                        ? first.Clone() 
+                        : new Set<T>(first, equalityComparer);
             operation(ret, second);
             return ret;
         }
