@@ -186,7 +186,8 @@ namespace Task3.Logic.Tests
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
             //act
-            Set<ItemProductTest> actual = Set<ItemProductTest>.Union(set, dataUnion);
+            Set<ItemProductTest> actual = Set<ItemProductTest>
+                .Union(set, new Set<ItemProductTest>(dataUnion));
             //assert
             CollectionAssert.AreEquivalent(dataExpected, actual);
             CollectionAssert.AllItemsAreUnique(actual);
@@ -257,7 +258,8 @@ namespace Task3.Logic.Tests
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
             //act
-            Set<ItemProductTest> actual = Set<ItemProductTest>.Intersect(set, dataIntersect);
+            Set<ItemProductTest> actual = Set<ItemProductTest>
+                .Intersect(set, new Set<ItemProductTest>(dataIntersect));
             //assert
             CollectionAssert.IsNotSubsetOf(dataUnexpected, actual);
             CollectionAssert.AreEquivalent(dataExpected, actual);
@@ -329,7 +331,8 @@ namespace Task3.Logic.Tests
             foreach (ItemProductTest t in dataIn)
                 set.Add(t);
             //act
-            Set<ItemProductTest> actual = Set<ItemProductTest>.Except(set, dataExcept);
+            Set<ItemProductTest> actual = Set<ItemProductTest>
+                .Except(set, new Set<ItemProductTest>(dataExcept));
             //assert
             CollectionAssert.IsNotSubsetOf(dataUnexpected, actual);
             CollectionAssert.AreEquivalent(dataExpected, actual);
@@ -402,7 +405,7 @@ namespace Task3.Logic.Tests
                 set.Add(t);
             //act
             Set<ItemProductTest> actual = Set<ItemProductTest>.SymmetricExcept
-                (set, dataSymmetricExcept);
+                (set, new Set<ItemProductTest>(dataSymmetricExcept));
             //assert
             CollectionAssert.IsNotSubsetOf(dataUnexpected, actual);
             CollectionAssert.AreEquivalent(dataExpected, actual);
